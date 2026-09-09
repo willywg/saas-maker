@@ -9,8 +9,11 @@ This template provides a complete SaaS starter with:
 - **Backend**: FastAPI + SQLModel + PostgreSQL + Alembic + JWT auth (PyJWT + bcrypt)
 - **Frontend**: React 19 + TypeScript 6 + Vite 8 + React Router 8 + TanStack Query + Shadcn/ui + Tailwind CSS 4
 - **Admin Panel**: Same stack as frontend, separate authentication
-- **Multi-tenancy**: Organizations with role-based access (owner > admin > member)
+- **Multi-tenancy**: Organizations with role-based access (owner > admin > member); users can belong to several organizations and switch between them
 - **Invitations**: Token-based team invitations with email notifications
+- **Sessions**: Refresh tokens persisted and rotated; logout, logout-all and password changes revoke them
+- **Email verification**: Verification link on signup, banner + resend in the app, optional hard requirement to log in
+- **Rate limiting**: Per-IP limits on login, registration, password reset and verification endpoints
 - **Design system**: `DESIGN.md` (tokens, components, do's and don'ts) with a parametric brand hue
 - **Tests**: pytest suite against real migrations (backend), Vitest + Testing Library (frontend, admin)
 - **CI**: GitHub Actions per repo (lint, typecheck, tests, audit, Docker build; no deploy)
@@ -80,6 +83,9 @@ saas-maker/
 - Multi-tenant organizations
 - Role-based access control
 - Team member invitations
+- Multi-organization membership with an organization switcher
+- Email verification, refresh-token revocation ("cerrar sesión en todos los dispositivos")
+- Rate limiting on authentication endpoints
 - Admin panel for system management
 - Responsive UI with dark mode support
 - Email templates (Jinja2)

@@ -76,6 +76,10 @@ CI runs per repo on GitHub Actions (lint, typecheck, tests, audit, Docker build)
 - **Organizations**: Multi-tenant with slug-based identification
 - **Members**: Role-based access (owner > admin > member)
 - **Invitations**: Token-based team invitations with expiration
+- **Sessions**: Persisted refresh tokens with rotation and revocation (logout, logout-all, password change)
+- **Email verification**: Verification link on signup; `REQUIRE_EMAIL_VERIFICATION` makes it mandatory
+- **Multi-org**: A user can belong to several organizations; `/auth/switch-organization` re-scopes the session
+- **Rate limiting**: slowapi on auth endpoints (`RATE_LIMIT_AUTH`)
 
 ## Database
 
@@ -85,4 +89,6 @@ PostgreSQL database named `saas_template`. Tables:
 - `organization_members` - User-org relationships with roles
 - `invite_tokens` - Pending invitations
 - `password_reset_tokens` - Password recovery tokens (hashed, single-use)
+- `email_verification_tokens` - Email confirmation tokens (hashed, single-use)
+- `refresh_tokens` - Issued refresh tokens (hashed) with revocation
 - `admin_users` - Platform admins (separate auth from tenant users)
