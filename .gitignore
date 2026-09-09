@@ -1,0 +1,9 @@
+# Cada subproyecto es su propio repositorio git
+backend/
+frontend/
+admin/
+
+# Local
+.DS_Store
+.claude/settings.local.json
+node_modules/

@@ -1,0 +1,75 @@
+# Infraestructura local opcional. El flujo principal sigue siendo correr todo
+# nativo (make dev / npm run dev) contra un Postgres local; esto es una
+# alternativa para quien no quiera instalar Postgres o un servidor SMTP.
+#
+#   docker compose up -d            # solo db + mail (lo que usa el stack nativo)
+#   docker compose --profile full up  # además backend, frontend y admin en contenedores
+#
+# Los valores coinciden con los .env.example de cada subproyecto.
+name: saas-template
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: saas_template
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mail:
+    # SMTP en 1025, UI web en http://localhost:8025
+    image: axllent/mailpit:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  backend:
+    profiles: [full]
+    build: ./backend
+    ports:
+      - "8090:8090"
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: saas_template
+      SMTP_HOST: mail
+      SMTP_PORT: "1025"
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-change-me-local-only-0123456789abcdef0123456789}
+      FRONTEND_URL: http://localhost:5190
+      CORS_ORIGINS: http://localhost:5190,http://localhost:5191
+      DEBUG: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8090"
+
+  frontend:
+    profiles: [full]
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:8090
+    ports:
+      - "5190:3000"
+    depends_on: [backend]
+
+  admin:
+    profiles: [full]
+    build:
+      context: ./admin
+      args:
+        VITE_API_BASE_URL: http://localhost:8090
+    ports:
+      - "5191:3000"
+    depends_on: [backend]
+
+volumes:
+  pgdata:
