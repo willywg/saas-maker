@@ -31,19 +31,48 @@ git submodule update --init
 
 ## Generate a New Project
 
+The CLI lives in [saas-maker-cli](https://github.com/willywg/saas-maker-cli) (PyPI package `saas-maker`):
+
 ```bash
-./generate-project.sh
+uvx saas-maker new my-app            # wizard: name, brand hue, Postgres, deploy and SMTP (optional)
+uvx saas-maker new my-app --defaults # non-interactive, placeholders for deploy/SMTP
 ```
 
-The script will ask for:
-- **Project slug**: lowercase name with hyphens (e.g., `my-awesome-app`)
-- **Display name**: Human-readable name (e.g., `My Awesome App`)
-- **Database name**: PostgreSQL database name (default: slug with underscores)
-- **Brand hue**: 0-360, drives the whole accent palette (see `DESIGN.md`)
-- **Docker username**: Your Docker Hub username for deployment
-- **Domain**: Your base domain (e.g., `myapp.com`)
-- **Server IP**: Deployment server IP (optional)
-- **SSH user**: SSH user for deployment (default: `deploy`)
+It downloads the three services at the pinned template tag, brands them, writes each `.env`
+and `.kamal/secrets`, runs `uv sync`, `npm install`, `createdb` and the migrations (best effort,
+`--skip-provision` to skip), and initializes one git repo per service.
+
+`./generate-project.sh` is the legacy bash generator; it does the same branding without provisioning.
+
+## Add a Module
+
+Inside a generated project, a tenant-scoped CRUD (table, API, page, sidebar entry, tests on both sides):
+
+```bash
+uvx saas-maker generate module invoice --label Factura --label-plural Facturas --feminine \
+  --fields "number:str:Número,amount:float:Monto,notes:text?:Notas,due:date?:Vence" \
+  --status "draft=Borrador,sent=Enviada,paid=Pagada"
+cd backend && make migrate && make test && make lint
+```
+
+The generated code follows the `projects` reference module (`reference/projects` branch in
+`saas-maker-backend` and `saas-maker-frontend`): every query filters by `organization_id`, other
+organizations get 404, any member reads, admin+ writes. The `saas-maker-add-module` Claude skill
+documents the same checklist for modules that are not a plain CRUD.
+
+### Generator anchors
+
+`generate module` inserts code right before these comment lines:
+
+| File | Anchor |
+|------|--------|
+| `backend/app/main.py` | `# generator:tenant-routers` |
+| `backend/app/models/__init__.py` | `# generator:models` (inside `__all__`) |
+| `frontend/src/router/index.tsx` | `// generator:route-imports`, `// generator:routes` |
+| `frontend/src/components/layout/Sidebar.tsx` | `// generator:nav` (inside `navItems`) |
+| `frontend/src/types/api.ts` | `// generator:types` (end of file) |
+
+Projects created before the anchors existed can add them by hand.
 
 ## Template Structure
 
@@ -69,7 +98,7 @@ saas-maker/
 │   └── src/              # Same structure as frontend
 ├── PRPs/                 # Product Requirements Prompts
 │   └── templates/        # PRP base template
-├── generate-project.sh   # Project generator script
+├── generate-project.sh   # Legacy bash generator (the CLI lives in saas-maker-cli)
 ├── docker-compose.yml    # Optional local infra (Postgres + Mailpit), full profile
 ├── DESIGN.md             # Design system (copied into generated projects)
 ├── CLAUDE.md             # Claude Code instructions
@@ -141,7 +170,7 @@ TypeScript stays on 6.x until typescript-eslint supports TS 7 (needs the TS 7.1 
 - Python >= 3.14
 - PostgreSQL >= 15
 - uv (Python package manager)
-- rsync (for generator script)
+- rsync (only for the legacy generate-project.sh)
 
 ## License
 
