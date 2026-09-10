@@ -46,7 +46,7 @@ if [[ ! "$PROJECT_SLUG" =~ ^[a-z][a-z0-9-]*$ ]]; then
     exit 1
 fi
 
-# Generate default display name from slug (psicolab -> Psicolab, somos-peru -> Somos Peru)
+# Generate default display name from slug (my-app -> My App, somos-peru -> Somos Peru)
 DEFAULT_DISPLAY_NAME=$(echo "$PROJECT_SLUG" | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2))}1')
 
 # Display name
