@@ -19,6 +19,16 @@ This template provides a complete SaaS starter with:
 - **CI**: GitHub Actions per repo (lint, typecheck, tests, audit, Docker build; no deploy)
 - **Deployment**: Kamal configuration for all services
 
+## Get the Template
+
+`backend/`, `frontend/` and `admin/` are git submodules (each one is its own repo so generated projects can deploy independently):
+
+```bash
+git clone --recurse-submodules https://github.com/willywg/saas-maker.git
+# or, if you already cloned without submodules:
+git submodule update --init
+```
+
 ## Generate a New Project
 
 ```bash
@@ -132,3 +142,7 @@ TypeScript stays on 6.x until typescript-eslint supports TS 7 (needs the TS 7.1 
 - PostgreSQL >= 15
 - uv (Python package manager)
 - rsync (for generator script)
+
+## License
+
+[Apache-2.0](LICENSE). Each subproject carries the same license; projects you generate from it are yours.

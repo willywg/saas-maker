@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SaaS Template - A multi-tenant SaaS platform template. This is the monorepo root containing frontend, backend, and admin as separate git repositories.
+SaaS Template - A multi-tenant SaaS platform template (Apache-2.0). This is the monorepo root containing frontend, backend, and admin as git submodules.
 
 ## Repository Structure
 
@@ -19,7 +19,7 @@ saas-template/
 └── CLAUDE.md    # This file
 ```
 
-Each subfolder has its own git repository for independent deployment. See individual `CLAUDE.md` files in each folder for specific guidance.
+`backend/`, `frontend/` and `admin/` are git submodules (each one is its own repo, deployed independently). Clone with `git clone --recurse-submodules`; commit and push inside each subrepo first, then update the pointer in the root repo. See individual `CLAUDE.md` files in each folder for specific guidance.
 
 ## Design System
 

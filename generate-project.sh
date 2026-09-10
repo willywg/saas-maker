@@ -85,8 +85,8 @@ echo ""
 echo -e "${CYAN}--- Deployment Configuration ---${NC}"
 
 # Docker registry username
-read -p "Docker Hub username [willywg]: " DOCKER_USER
-DOCKER_USER="${DOCKER_USER:-willywg}"
+read -p "Docker Hub username [your-username]: " DOCKER_USER
+DOCKER_USER="${DOCKER_USER:-your-username}"
 
 # Domain configuration (default: slug.com)
 DEFAULT_DOMAIN="${PROJECT_SLUG}.com"
@@ -98,14 +98,14 @@ read -p "Server IP for deployment (leave empty to fill later): " SERVER_IP
 SERVER_IP="${SERVER_IP:-your-server-ip}"
 
 # SSH user
-read -p "SSH user for deployment [willywg]: " SSH_USER
-SSH_USER="${SSH_USER:-willywg}"
+read -p "SSH user for deployment [deploy]: " SSH_USER
+SSH_USER="${SSH_USER:-deploy}"
 
 echo ""
 echo -e "${CYAN}--- Credentials (leave empty for defaults) ---${NC}"
 
 # Docker Registry Password
-read -p "Docker Registry Password [from template]: " DOCKER_PASSWORD
+read -p "Docker Registry Password (leave empty to fill later): " DOCKER_PASSWORD
 DOCKER_PASSWORD="${DOCKER_PASSWORD:-your_docker_password}"
 
 # Database Password
@@ -122,8 +122,8 @@ fi
 echo ""
 echo -e "${CYAN}--- SMTP Configuration ---${NC}"
 
-read -p "SMTP Host [smtp-relay.brevo.com]: " SMTP_HOST
-SMTP_HOST="${SMTP_HOST:-smtp-relay.brevo.com}"
+read -p "SMTP Host [smtp.example.com]: " SMTP_HOST
+SMTP_HOST="${SMTP_HOST:-smtp.example.com}"
 
 read -p "SMTP Port [587]: " SMTP_PORT
 SMTP_PORT="${SMTP_PORT:-587}"
@@ -331,6 +331,7 @@ done
 # =============================================================================
 
 echo "  Updating secrets files..."
+mkdir -p "${OUTPUT_DIR}/backend/.kamal" "${OUTPUT_DIR}/frontend/.kamal" "${OUTPUT_DIR}/admin/.kamal"
 
 # Backend secrets
 cat > "${OUTPUT_DIR}/backend/.kamal/secrets" << EOF
