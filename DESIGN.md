@@ -407,6 +407,7 @@ The apps are built from shadcn/ui primitives. The table maps design tokens to th
 | primary, on-primary | `--primary`, `--primary-foreground` (admin: ink / canvas) |
 | primary (as ring) | `--ring` |
 | semantic-destructive | `--destructive` |
+| semantic-success / warning / info | `--success` / `--warning` / `--info` (frontend; lighter values in `.dark`) |
 
 ### Buttons
 
