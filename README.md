@@ -24,14 +24,14 @@ This template provides a complete SaaS starter with:
 `backend/`, `frontend/` and `admin/` are git submodules (each one is its own repo so generated projects can deploy independently):
 
 ```bash
-git clone --recurse-submodules https://github.com/willywg/saas-maker.git
+git clone --recurse-submodules https://github.com/SaaS-Maker-Stack/saas-maker.git
 # or, if you already cloned without submodules:
 git submodule update --init
 ```
 
 ## Generate a New Project
 
-The CLI lives in [saas-maker-cli](https://github.com/willywg/saas-maker-cli) (PyPI package `saas-maker`):
+The CLI lives in [saas-maker-cli](https://github.com/SaaS-Maker-Stack/saas-maker-cli) (PyPI package `saas-maker`):
 
 ```bash
 uvx saas-maker new my-app            # wizard: name, brand hue, Postgres, deploy and SMTP (optional)
